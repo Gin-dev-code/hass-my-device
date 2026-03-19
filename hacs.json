@@ -1,5 +1,9 @@
 {
-  "name": "Integration blueprint",
-  "homeassistant": "2025.12.3",
-  "hacs": "2.0.5"
+    "name": "Transfer of water readings to Tatenergosbyt",
+    "content_in_root": false,
+    "render_readme": true,
+    "domains": ["trans_met_read"],
+    "country": "RU",
+    "homeassistant": "2025.12.3",
+    "hacs": "2.0.5"
 }
