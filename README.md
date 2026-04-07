@@ -1,8 +1,6 @@
 
 ---
 
-## Полностью исправленный README (для копирования целиком):
-
 ```markdown
 # Transfer of water meter readings to Tatenergosbyt
 
