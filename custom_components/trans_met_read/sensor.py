@@ -22,7 +22,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     # Если есть ошибка, создаем только сенсор статуса
     if isinstance(readings, dict) and "error" in readings:
-        _LOGGER.error(f"Error getting readings: {readings['error']}")
+        _LOGGER.error("Error getting readings: %s", readings['error'])
         sensors.append(TatenergosbytStatusSensor(client, hass, entry))
         async_add_entities(sensors)
         return
@@ -32,7 +32,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         for meter_id, meter_data in readings.items():
             if isinstance(meter_data, dict) and "service_name" in meter_data:
                 sensors.append(TatenergosbytMeterSensor(client, hass, entry, meter_id, meter_data))
-                _LOGGER.debug(f"Created sensor for {meter_data.get('service_name')} ({meter_id})")
+                _LOGGER.debug("Created sensor for %s (%s)", meter_data.get("service_name"), meter_id)
 
     # Добавляем сенсор статуса
     sensors.append(TatenergosbytStatusSensor(client, hass, entry))
@@ -42,7 +42,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         hass.data[DOMAIN]["entities"] = []
     hass.data[DOMAIN]["entities"].extend(sensors)
 
-    _LOGGER.info(f"Total sensors created: {len(sensors)}")
+    _LOGGER.info("Total sensors created: %d", len(sensors))
     async_add_entities(sensors)
 
 
