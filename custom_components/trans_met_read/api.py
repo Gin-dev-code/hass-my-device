@@ -177,10 +177,13 @@ class TatenergosbytApiClient:
                             }
 
                             _LOGGER.debug(
-                                f"Found meter: {meter_id} - {item.get('serviceName')} = {item.get('lastIndication')}"
+                                "Found meter: %s - %s = %s",
+                                meter_id,
+                                item.get("serviceName"),
+                                item.get("lastIndication")
                             )
 
-                        _LOGGER.info(f"Total meters found: {len(readings)}")
+                        _LOGGER.info("Total meters found: %d", len(readings))
                         return readings
 
                     return {"error": data.get("message")}
@@ -219,7 +222,7 @@ class TatenergosbytApiClient:
             if not await self.authenticate():
                 return {"success": False, "message": "Not authenticated"}
 
-        _LOGGER.debug(f"Sending indication for GUID {guid}: value {value}")
+        _LOGGER.debug("Sending indication for GUID %s: value %s", guid, value)
 
         try:
             async with async_timeout.timeout(30):
@@ -255,13 +258,13 @@ class TatenergosbytApiClient:
 
                 payload = {"domHoz": self.username, "indications": [indication]}
 
-                _LOGGER.debug(f"Sending indication payload: {payload}")
+                _LOGGER.debug("Sending indication payload: %s", payload)
 
                 response = await self.session.post(f"{self.base_url}/SetIndication", json=payload, headers=headers)
 
                 if response.status == 200:
                     data = await response.json()
-                    _LOGGER.debug(f"Set indication response: {data}")
+                    _LOGGER.debug("Set indication response: %s", data)
 
                     if data.get("success"):
                         # Проверяем результат для нашего GUID
@@ -278,17 +281,17 @@ class TatenergosbytApiClient:
                         return {"success": False, "message": "GUID не найден в ответе", "data": data}
                     return {"success": False, "message": data.get("message", "Неизвестная ошибка"), "data": data}
                 error_text = await response.text()
-                _LOGGER.error(f"HTTP {response.status}: {error_text}")
+                _LOGGER.error("HTTP %s: %s", response.status, error_text)
                 return {"success": False, "message": f"HTTP {response.status}", "error": error_text}
 
         except TimeoutError:
             _LOGGER.error("Timeout setting indication")
             return {"success": False, "message": "timeout"}
         except aiohttp.ClientError as err:
-            _LOGGER.error(f"Client error setting indication: {err}")
+            _LOGGER.error("Client error setting indication: %s", err)
             return {"success": False, "message": str(err)}
         except Exception as err:
-            _LOGGER.error(f"Unexpected error setting indication: {err}")
+            _LOGGER.error("Unexpected error setting indication: %s", err)
             return {"success": False, "message": str(err)}
 
     def _get_unit_from_service(self, service_name: str) -> str:
