@@ -39,7 +39,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Настраиваем все платформы
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    _LOGGER.info(f"Tatenergosbyt integration setup completed for entry {entry.entry_id}")
+    _LOGGER.info("Tatenergosbyt integration setup completed for entry %s", entry.entry_id)
     return True
 
 
@@ -49,5 +49,5 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
-        _LOGGER.info(f"Tatenergosbyt integration unloaded for entry {entry.entry_id}")
+        _LOGGER.info("Tatenergosbyt integration unloaded for entry %s", entry.entry_id)
     return unload_ok
