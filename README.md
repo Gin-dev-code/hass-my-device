@@ -2,7 +2,7 @@
 ---
 
 ```markdown
-# Transfer of water meter readings to Tatenergosbyt
+Transfer of water meter readings to Tatenergosbyt
 
 [![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![License](https://img.shields.io/github/license/Gin-dev-code/hass-my-device)](LICENSE)
