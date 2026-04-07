@@ -22,14 +22,14 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     # Получаем данные всех счётчиков для создания кнопок отправки
     readings = await client.get_meter_readings()
-    _LOGGER.debug(f"Creating submit buttons from readings: {readings}")
+    _LOGGER.debug("Creating submit buttons from readings: %s", readings)
 
     # Кнопки отправки для каждого счётчика
     if isinstance(readings, dict) and "error" not in readings:
         for meter_id, meter_data in readings.items():
             if isinstance(meter_data, dict) and "guid" in meter_data:
                 buttons.append(TatenergosbytSubmitButton(client, hass, entry, meter_id, meter_data))
-                _LOGGER.info(f"Created submit button for {meter_data.get('service_name')}")
+                _LOGGER.info("Created submit button for %s", meter_data.get("service_name"))
 
     async_add_entities(buttons)
 
@@ -37,7 +37,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     if "entities" not in hass.data[DOMAIN]:
         hass.data[DOMAIN]["entities"] = []
     hass.data[DOMAIN]["entities"].extend(buttons)
-    _LOGGER.debug(f"Total buttons added: {len(buttons)} and added to global entities list")
+    _LOGGER.debug("Total buttons added: %d and added to global entities list", len(buttons))
 
 
 class TatenergosbytReconnectButton(ButtonEntity):
@@ -127,7 +127,7 @@ class TatenergosbytSubmitButton(ButtonEntity):
     async def async_press(self) -> None:
         """Handle submit button press."""
         if not self._can_submit_today():
-            _LOGGER.warning(f"Cannot submit {self._service_name} - outside allowed period (15-25)")
+            _LOGGER.warning("Cannot submit %s - outside allowed period (15-25)", self._service_name)
             self.hass.bus.async_fire(
                 "tatenergosbyt_notification",
                 {
@@ -138,7 +138,7 @@ class TatenergosbytSubmitButton(ButtonEntity):
             )
             return
 
-        _LOGGER.info(f"Submitting reading for {self._service_name}")
+        _LOGGER.info("Submitting reading for %s", self._service_name)
 
         # Ищем number entity для этого счётчика
         number_entity = None
@@ -146,12 +146,13 @@ class TatenergosbytSubmitButton(ButtonEntity):
             if hasattr(entity, "meter_id") and entity.meter_id == self.meter_id:
                 number_entity = entity
                 _LOGGER.warning(
-                    f"✅ Найден number entity: {entity.entity_id if hasattr(entity, 'entity_id') else entity}"
+                    "✅ Найден number entity: %s",
+                    entity.entity_id if hasattr(entity, "entity_id") else entity
                 )
                 break
 
         if not number_entity:
-            _LOGGER.error(f"No number entity found for meter {self.meter_id}")
+            _LOGGER.error("No number entity found for meter %s", self.meter_id)
             self.hass.bus.async_fire(
                 "tatenergosbyt_notification",
                 {"title": "Ошибка", "message": f"Не найдено поле ввода для {self._service_name}", "level": "error"},
@@ -161,12 +162,12 @@ class TatenergosbytSubmitButton(ButtonEntity):
         # Получаем значение из pending_value
         if hasattr(number_entity, "pending_value"):
             value_to_submit = number_entity.pending_value
-            _LOGGER.warning(f"📦 Использую pending_value: {value_to_submit}")
+            _LOGGER.warning("📦 Использую pending_value: %s", value_to_submit)
         elif hasattr(number_entity, "_pending_value"):
             value_to_submit = number_entity._pending_value
-            _LOGGER.warning(f"📦 Использую _pending_value: {value_to_submit}")
+            _LOGGER.warning("📦 Использую _pending_value: %s", value_to_submit)
         else:
-            _LOGGER.error(f"number_entity не имеет pending_value! Атрибуты: {dir(number_entity)}")
+            _LOGGER.error("number_entity не имеет pending_value! Атрибуты: %s", dir(number_entity))
             self.hass.bus.async_fire(
                 "tatenergosbyt_notification",
                 {"title": "Ошибка", "message": "Техническая ошибка: нет pending_value", "level": "error"},
@@ -176,7 +177,7 @@ class TatenergosbytSubmitButton(ButtonEntity):
         # Проверяем, что значение не меньше последнего показания
         last_value = number_entity._last_value if hasattr(number_entity, "_last_value") else 0
         if value_to_submit < last_value:
-            _LOGGER.warning(f"Value {value_to_submit} is less than last reading {last_value}")
+            _LOGGER.warning("Value %s is less than last reading %s", value_to_submit, last_value)
             self.hass.bus.async_fire(
                 "tatenergosbyt_notification",
                 {
@@ -191,7 +192,7 @@ class TatenergosbytSubmitButton(ButtonEntity):
         result = await self.client.set_indication(guid=self._guid, value=value_to_submit, zone=self._zone)
 
         if result.get("success"):
-            _LOGGER.info(f"✅ Successfully submitted {value_to_submit} for {self._service_name}")
+            _LOGGER.info("✅ Successfully submitted %s for %s", value_to_submit, self._service_name)
 
             # Обновляем сенсоры
             for entity in self.hass.data[DOMAIN].get("entities", []):
@@ -208,7 +209,7 @@ class TatenergosbytSubmitButton(ButtonEntity):
             )
         else:
             error_msg = result.get("message", "Неизвестная ошибка")
-            _LOGGER.error(f"❌ Failed to submit reading: {error_msg}")
+            _LOGGER.error("❌ Failed to submit reading: %s", error_msg)
             self.hass.bus.async_fire(
                 "tatenergosbyt_notification", {"title": "Ошибка отправки", "message": error_msg, "level": "error"}
             )
