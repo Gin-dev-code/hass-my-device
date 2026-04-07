@@ -2,6 +2,9 @@
 
 import logging
 
+import voluptuous as vol
+
+from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -48,9 +51,3 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
         _LOGGER.info(f"Tatenergosbyt integration unloaded for entry {entry.entry_id}")
     return unload_ok
-
-
-async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    """Set up the Tatenergosbyt integration from YAML (if needed)."""
-    _LOGGER.debug("Async setup called")
-    return True
