@@ -86,7 +86,7 @@ class TatenergosbytMeterSensor(SensorEntity):
             "domHoz": data.get("domHoz"),
         }
 
-        _LOGGER.debug(f"Sensor {self._attr_name} created with value {self._attr_native_value}")
+        _LOGGER.debug("Sensor %s created with value %s", self._attr_name, self._attr_native_value)
 
     def _get_icon_from_service(self, service_name: str) -> str:
         """Get appropriate icon based on service type."""
@@ -118,7 +118,7 @@ class TatenergosbytMeterSensor(SensorEntity):
                     "last_update": data.get("date"),
                 }
             )
-            _LOGGER.debug(f"Updated {self._attr_name} = {self._attr_native_value}")
+            _LOGGER.debug("Updated %s = %s", self._attr_name, self._attr_native_value)
 
 
 class TatenergosbytStatusSensor(SensorEntity):
