@@ -1,8 +1,4 @@
-
----
-
-```markdown
-Transfer of water meter readings to Tatenergosbyt
+# Transfer of water meter readings to Tatenergosbyt
 
 [![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![License](https://img.shields.io/github/license/Gin-dev-code/hass-my-device)](LICENSE)
@@ -22,9 +18,11 @@ Transfer of water meter readings to Tatenergosbyt
 ### Через HACS (рекомендуется)
 
 1. Убедитесь, что [HACS](https://hacs.xyz/) установлен в Home Assistant
-2. Откройте HACS → Интеграции → нажмите три точки → Custom repositories
-3. Добавьте `https://github.com/Gin-dev-code/hass-my-device` с типом Integration
-4. Нажмите "Download" и перезапустите Home Assistant
+2. Нажмите на кнопку ниже, чтобы открыть репозиторий в HACS:
+
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=Gin-dev-code&repository=hass-my-device&category=Integration" target="_blank" rel="noreferrer noopener"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store." /></a>
+
+3. Нажмите **"Download"** и перезапустите Home Assistant
 
 ### Вручную
 
