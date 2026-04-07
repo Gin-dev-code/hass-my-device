@@ -53,4 +53,4 @@
 Принудительное обновление данных из API.
 
 ```yaml
-service: trans_met_read.reload_data
+service: trans_met_read.reload_data 
