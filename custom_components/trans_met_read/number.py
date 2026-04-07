@@ -17,7 +17,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     # Получаем данные всех счётчиков
     readings = await client.get_meter_readings()
-    _LOGGER.debug(f"Creating number inputs from readings: {readings}")
+    _LOGGER.debug("Creating number inputs from readings: %s", readings)
 
     numbers = []
 
@@ -25,7 +25,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         for meter_id, meter_data in readings.items():
             if isinstance(meter_data, dict) and "guid" in meter_data:
                 numbers.append(TatenergosbytIndicationNumber(client, hass, entry, meter_id, meter_data))
-                _LOGGER.info(f"Created number input for {meter_data.get('service_name')}")
+                _LOGGER.info("Created number input for %s", meter_data.get("service_name"))
 
     async_add_entities(numbers)
 
@@ -33,7 +33,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     if "entities" not in hass.data[DOMAIN]:
         hass.data[DOMAIN]["entities"] = []
     hass.data[DOMAIN]["entities"].extend(numbers)
-    _LOGGER.debug(f"Added {len(numbers)} number entities to global entities list")
+    _LOGGER.debug("Added %d number entities to global entities list", len(numbers))
 
 
 class TatenergosbytIndicationNumber(NumberEntity):
@@ -88,7 +88,7 @@ class TatenergosbytIndicationNumber(NumberEntity):
             "can_submit": self._can_submit_today(),
         }
 
-        _LOGGER.debug(f"Number input created: {self._attr_name} with GUID {self._guid}")
+        _LOGGER.debug("Number input created: %s with GUID %s", self._attr_name, self._guid)
 
     @property
     def pending_value(self):
@@ -110,7 +110,7 @@ class TatenergosbytIndicationNumber(NumberEntity):
         self._pending_value = value
         self._attr_native_value = value
         self._attr_extra_state_attributes["pending_value"] = value
-        _LOGGER.warning(f"⚠️ Пользователь изменил значение {self._service_name} на {value}")
+        _LOGGER.warning("⚠️ Пользователь изменил значение %s на %s", self._service_name, value)
 
     async def async_update(self):
         """Update the number entity with latest data."""
